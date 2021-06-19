@@ -72,7 +72,7 @@ function getAllUsers() {
     if (users.length == 0) {
       $(".table.table-striped.table-hover").hide();
       $(".table.table-striped.table-hover").before(
-        '<div class="no-user-div">Ainda não existem usuários cadastrados.</div>'
+        '<div class="no-user-div">Ainda não existem alunos cadastrados.</div>'
       );
     } else {
       $.each(users, function (key, value) {
@@ -127,7 +127,7 @@ function getAllUsersByNameLike(nameToSearch) {
   // if (users.length == 0) {
   //   $(".table.table-striped.table-hover").hide();
   //   $(".table.table-striped.table-hover").before(
-  //     '<div class="no-user-div">Ainda não existem usuários cadastrados.</div>'
+  //     '<div class="no-user-div">Ainda não existem alunos cadastrados.</div>'
   //   );
   // } else {
   //   $.each(users, function (key, value) {
@@ -204,12 +204,12 @@ function addUser() {
     $.ajax(settings).done(function (response) {
       console.log(response);
       if (response) {
-        if (!alert("Usuário adicionado com sucesso!")) {
+        if (!alert("Aluno adicionado com sucesso!")) {
           clearUserForm();
           window.location.reload();
         }
       } else {
-        alert("Houve um problema ao tentar criar um usuário!")
+        alert("Houve um problema ao tentar criar um aluno!")
       }
     });
   }
@@ -278,7 +278,7 @@ function updateUser() {
 
     $.ajax(settings).done(function (response) {
       console.log(response);
-      if (!alert("Usuário atualizado com sucesso!")) {
+      if (!alert("Aluno atualizado com sucesso!")) {
         window.location.reload();
       }
     });
@@ -295,7 +295,7 @@ function confirmDeleteUser() {
 
   $.ajax(settings).done(function (response) {
     console.log(response);
-    if (!alert("Usuário removido com sucesso!")) {
+    if (!alert("Aluno removido com sucesso!")) {
       window.location.reload();
     }
   });

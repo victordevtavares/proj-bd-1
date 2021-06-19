@@ -4,8 +4,9 @@ Um CRUD para controle de matrículas de alunos, com importação de CSV. Projeto
 
 Para subir o ambiente, execute o comando ***docker-compose up*** na pasta raiz do projeto.
 
-## Learning Plan:
+## Resolução de problemas:
+### Node container crash
+    node     | standard_init_linux.go:228: exec user process caused: no such file or directory
 
-
-
-### List of subjects and estimated time:
+    Modificar o tipo do arquivo docker-config\node\start_application.sh de CRLF para LF.
+    https://stackoverflow.com/a/60571147/10291492
