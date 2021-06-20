@@ -15,7 +15,7 @@ app.use(
   })
 );
 
-require("./routes/user.js")(app);
+require("./routes/student.js")(app);
 
 app.listen(port, (err, res) => {
   if (err) console.log(err);

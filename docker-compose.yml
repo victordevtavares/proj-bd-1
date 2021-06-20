@@ -45,7 +45,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      "MYSQL_DATABASE": "my_crud"
+      "MYSQL_DATABASE": "my_school"
       "MYSQL_ROOT_PASSWORD": "mypass"
     networks:
       - my-app-network

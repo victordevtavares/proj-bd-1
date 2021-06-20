@@ -1,6 +1,6 @@
 let backendServer = "http://localhost:8000";
-let userToBeRemovedId = 0;
-let userToBeEdited = 0;
+let studentToBeRemovedId = 0;
+let studentToBeEdited = 0;
 
 $(document).ready(function () {
   // Activate tooltip
@@ -25,38 +25,38 @@ $(document).ready(function () {
     }
   });
 
-  $("#addUserForm").submit(function (e) {
+  $("#addStudentForm").submit(function (e) {
     e.preventDefault();
   });
 
-  $("#addUser").click(function () {
-    addUser();
+  $("#addStudent").click(function () {
+    addStudent();
   });
 
-  $("#editUser").click(function () {
-    updateUser();
+  $("#editStudent").click(function () {
+    updateStudent();
   });
 
-  $("#deleteUser").click(function () {
-    confirmDeleteUser();
+  $("#deleteStudent").click(function () {
+    confirmDeleteStudent();
   });
 
   $(".search-button").click(function () {
     alert("Haha!! You'll have to implement this!");
 
     let nameToSearch = $(".search-box-input").val();
-    getAllUsersByNameLike(nameToSearch);
+    getAllStudentsByNameLike(nameToSearch);
   });
 
-  getAllUsers();
-  clearUserForm();
+  getAllStudents();
+  clearStudentForm();
 });
 
-function getAllUsers() {
+function getAllStudents() {
   var form = new FormData();
 
   var settings = {
-    url: backendServer + "/users",
+    url: backendServer + "/students",
     method: "GET",
     timeout: 0,
     processData: false,
@@ -65,17 +65,17 @@ function getAllUsers() {
   };
 
   $.ajax(settings).done(function (response) {
-    let users = JSON.parse(response);
-    console.log(users);
+    let students = JSON.parse(response);
+    console.log(students);
     let tableBody = "";
 
-    if (users.length == 0) {
+    if (students.length == 0) {
       $(".table.table-striped.table-hover").hide();
       $(".table.table-striped.table-hover").before(
-        '<div class="no-user-div">Ainda não existem alunos cadastrados.</div>'
+        '<div class="no-student-div">Ainda não existem alunos cadastrados.</div>'
       );
     } else {
-      $.each(users, function (key, value) {
+      $.each(students, function (key, value) {
         let row = `
         <tr id="${value.id}">
           <td>
@@ -89,26 +89,24 @@ function getAllUsers() {
               <label for="checkbox1"></label>
             </span>
           </td>
+          <td>${value.id}</td>
           <td>${value.name}</td>
-          <td>${value.email}</td>
-          <td>${value.username}</td>
-          <td>${value.type}</td>
+          <td>${value.course}</td>
           <td>${value.active == 1 ? "Sim" : "Não"}</td>
           <td>
-            <a href="#editEmployeeModal" class="edit" data-toggle="modal" style="color: grey;">
-              <i class="material-icons" data-toggle="tooltip" title="Edit" onclick="loadEditUser(${
+            <a href="#editStudentModal" class="edit" data-toggle="modal" style="color: grey;">
+              <i class="material-icons" data-toggle="tooltip" title="Edit" onclick="loadEditStudent(${
                 value.id
               });">&#xE254;</i>
             </a>
-            <a href="#deleteEmployeeModal" class="delete" data-toggle="modal" style="color: #F08080;">
-              <i class="material-icons" data-toggle="tooltip" title="Delete" onclick="userToBeRemoved(${
+            <a href="#deleteStudentModal" class="delete" data-toggle="modal" style="color: #F08080;">
+              <i class="material-icons" data-toggle="tooltip" title="Delete" onclick="studentToBeRemoved(${
                 value.id
               });">&#xE872;</i>
             </a>
           </td>
         </tr>
       `;
-
         tableBody += row;
       });
     }
@@ -117,20 +115,20 @@ function getAllUsers() {
   });
 }
 
-function getAllUsersByNameLike(nameToSearch) {
+function getAllStudentsByNameLike(nameToSearch) {
   console.log(nameToSearch);
   // Construa a request para o endpoint do backend. No retorno, você pode usar renderização na tabela aproveitando o código abaixo:
 
-  // let users = JSON.parse(response);
+  // let students = JSON.parse(response);
   // let tableBody = "";
 
-  // if (users.length == 0) {
+  // if (students.length == 0) {
   //   $(".table.table-striped.table-hover").hide();
   //   $(".table.table-striped.table-hover").before(
-  //     '<div class="no-user-div">Ainda não existem alunos cadastrados.</div>'
+  //     '<div class="no-student-div">Ainda não existem alunos cadastrados.</div>'
   //   );
   // } else {
-  //   $.each(users, function (key, value) {
+  //   $.each(students, function (key, value) {
   //     let row = `
   //       <tr id="${value.id}">
   //         <td>
@@ -146,17 +144,17 @@ function getAllUsersByNameLike(nameToSearch) {
   //         </td>
   //         <td>${value.name}</td>
   //         <td>${value.email}</td>
-  //         <td>${value.username}</td>
+  //         <td>${value.studentname}</td>
   //         <td>${value.type}</td>
   //         <td>${value.active == 1 ? "Sim" : "Não"}</td>
   //         <td>
-  //           <a href="#editEmployeeModal" class="edit" data-toggle="modal" style="color: grey;">
-  //             <i class="material-icons" data-toggle="tooltip" title="Edit" onclick="loadEditUser(${
+  //           <a href="#editStudentModal" class="edit" data-toggle="modal" style="color: grey;">
+  //             <i class="material-icons" data-toggle="tooltip" title="Edit" onclick="loadEditStudent(${
   //               value.id
   //             });">&#xE254;</i>
   //           </a>
-  //           <a href="#deleteEmployeeModal" class="delete" data-toggle="modal" style="color: #F08080;">
-  //             <i class="material-icons" data-toggle="tooltip" title="Delete" onclick="userToBeRemoved(${
+  //           <a href="#deleteStudentModal" class="delete" data-toggle="modal" style="color: #F08080;">
+  //             <i class="material-icons" data-toggle="tooltip" title="Delete" onclick="studentToBeRemoved(${
   //               value.id
   //             });">&#xE872;</i>
   //           </a>
@@ -171,32 +169,24 @@ function getAllUsersByNameLike(nameToSearch) {
   // $("#maintable").append(tableBody);
 }
 
-function addUser() {
+function addStudent() {
   if (
-    !$("#addUserFormLogin").val() ||
-    !$("#addUserFormPassword").val() ||
-    !$("#addUserFormName").val() ||
-    !$("#addUserFormEmail").val() ||
-    !$("#addUserFormType").val()
+    !$("#addStudentFormCourse").val() ||
+    !$("#addStudentFormName").val()
   ) {
     alert("Todos os campos são obrigatórios!");
-  } else if ($("#addUserFormEmail").val().indexOf("@") < 1) {
-    alert("Preencha o campo de email corretamente");
   } else {
     console.log("entrou no else");
     var settings = {
-      url: backendServer + "/users",
+      url: backendServer + "/students",
       method: "POST",
       timeout: 0,
       headers: {
         "Content-Type": "application/json",
       },
       data: JSON.stringify({
-        username: $("#addUserFormLogin").val().toUpperCase(),
-        password: $("#addUserFormPassword").val(),
-        name: $("#addUserFormName").val().toUpperCase(),
-        email: $("#addUserFormEmail").val(),
-        type: $("#addUserFormType").val().toUpperCase(),
+        course: $("#addStudentFormCourse").val(),
+        name: $("#addStudentFormName").val().toUpperCase(),
         active: true,
       }),
     };
@@ -205,7 +195,7 @@ function addUser() {
       console.log(response);
       if (response) {
         if (!alert("Aluno adicionado com sucesso!")) {
-          clearUserForm();
+          clearStudentForm();
           window.location.reload();
         }
       } else {
@@ -215,15 +205,15 @@ function addUser() {
   }
 }
 
-function userToBeRemoved(id) {
-  userToBeRemovedId = id;
+function studentToBeRemoved(id) {
+  studentToBeRemovedId = id;
 }
 
-function loadEditUser(id) {
-  userToBeEdited = id;
+function loadEditStudent(id) {
+  studentToBeEdited = id;
   var form = new FormData();
   var settings = {
-    url: backendServer + "/users/" + id,
+    url: backendServer + "/students/" + id,
     method: "GET",
     timeout: 0,
     processData: false,
@@ -233,46 +223,38 @@ function loadEditUser(id) {
   };
 
   $.ajax(settings).done(function (response) {
-    let userToBeEdited = JSON.parse(response);
-    console.log(userToBeEdited.username);
+    let studentToBeEdited = JSON.parse(response);
+    console.log(studentToBeEdited.studentname);
     if (response) {
-      $("#editUserFormLogin").val(userToBeEdited.username);
-      $("#editUserFormPassword").val(userToBeEdited.password);
-      $("#editUserFormName").val(userToBeEdited.name);
-      $("#editUserFormEmail").val(userToBeEdited.email);
-      $("#editUserFormType").val(userToBeEdited.type);
+      $("#editStudentFormRegister").val(studentToBeEdited.id);
+      $("#editStudentFormCourse").val(studentToBeEdited.course);
+      $("#editStudentFormName").val(studentToBeEdited.name);
     }
   });
 }
 
-function updateUser() {
+function updateStudent() {
   if (
-    !$("#editUserFormLogin").val() ||
-    !$("#editUserFormPassword").val() ||
-    !$("#editUserFormName").val() ||
-    !$("#editUserFormEmail").val() ||
-    !$("#editUserFormType").val()
+    !$("#editStudentFormRegister").val() ||
+    !$("#editStudentFormCourse").val() ||
+    !$("#editStudentFormName").val()
   ) {
     alert("Todos os campos são obrigatórios!");
-  } else if ($("#editUserFormEmail").val().indexOf("@") < 1) {
-    alert("Preencha o campo de email corretamente");
   } else {
     console.log("entrou no else!");
     var settings = {
-      url: backendServer + "/users/" + userToBeEdited,
+      url: backendServer + "/students/" + studentToBeEdited,
       method: "PUT",
       timeout: 0,
       headers: {
         "Content-Type": "application/json",
       },
       data: JSON.stringify({
-        id: userToBeEdited,
-        username: $("#editUserFormLogin").val().toUpperCase(),
-        password: $("#editUserFormPassword").val(),
-        name: $("#editUserFormName").val().toUpperCase(),
-        email: $("#editUserFormEmail").val().toUpperCase(),
-        type: $("#editUserFormType").val(),
-        active: $("#activeOpts").val().toUpperCase(),
+        id: studentToBeEdited,
+        studentname: $("#editStudentFormRegister").val().toUpperCase(),
+        course: $("#editStudentFormCourse").val(),
+        name: $("#editStudentFormName").val().toUpperCase(),
+        active: $("#activeOpts").val().toUpperCase()
       }),
     };
 
@@ -285,10 +267,10 @@ function updateUser() {
   }
 }
 
-function confirmDeleteUser() {
-  console.log("Removing the user: ", userToBeRemovedId);
+function confirmDeleteStudent() {
+  console.log("Removing the student: ", studentToBeRemovedId);
   var settings = {
-    url: backendServer + "/users/" + userToBeRemovedId,
+    url: backendServer + "/students/" + studentToBeRemovedId,
     method: "DELETE",
     timeout: 0,
   };
@@ -301,10 +283,8 @@ function confirmDeleteUser() {
   });
 }
 
-function clearUserForm() {
-  $("#addUserFormLogin").val("");
-  $("#addUserFormPassword").val("");
-  $("#addUserFormName").val("");
-  $("#addUserFormEmail").val("");
-  $("#addUserFormType").val("");
+function clearStudentForm() {
+  $("#addStudentFormRegister").val("");
+  $("#addStudentFormCourse").val("");
+  $("#addStudentFormName").val("");
 }

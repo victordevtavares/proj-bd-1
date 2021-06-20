@@ -14,8 +14,6 @@ function check_running() {
 }
 
 check_running;
-if [ $? -gt 0 ]; then
-    echo "A problem occurred running app.js. Lets wait 20 seconds and try once more! (Probabilly database not ready!)..."
-    sleep 20;
-    check_running;
-fi
+sleep 10;
+check_running;
+
