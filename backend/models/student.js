@@ -8,7 +8,7 @@ const Student = function (student){
 };
 
 Student.createStudent = (newStudent, result) => {
-  conn.query("INSERT INTO students SET ?", newStudent, (err, res) => {
+  conn.query("INSERT IGNORE INTO students SET ?", newStudent, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

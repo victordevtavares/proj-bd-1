@@ -25,6 +25,33 @@ exports.create = (req, res) => {
   });
 };
 
+exports.import = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!",
+    });
+  }
+  // Create a Student List
+  let students = req.body.list;
+
+  students.forEach(element => {
+    // Create a Student
+    const student = new Student({
+      id: element[0],
+      name: element[1].toUpperCase(),
+      course: '-',
+      active: true,
+    });
+
+    // Save Student in the database
+    Student.createStudent(student, (err, data) => {
+        console.log(data);
+    });
+  });
+    res.send("SUCESS!");
+};
+
 // Retrieve all Students from the database.
 exports.getAll = (req, res) => {
   Student.getAllStudents((err, data) => {

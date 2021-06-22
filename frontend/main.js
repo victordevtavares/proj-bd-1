@@ -1,6 +1,7 @@
 let backendServer = "http://localhost:8000";
 let studentToBeRemovedId = 0;
 let studentToBeEdited = 0;
+let studentsCSV = [];
 
 $(document).ready(function () {
   // Activate tooltip
@@ -41,11 +42,41 @@ $(document).ready(function () {
     confirmDeleteStudent();
   });
 
+  $("#deleteStudentBatch").click(function () {
+    confirmDeleteAllStudents();
+  });
+
   $(".search-button").click(function () {
     alert("Haha!! You'll have to implement this!");
 
     let nameToSearch = $(".search-box-input").val();
     getAllStudentsByNameLike(nameToSearch);
+  });
+
+  $("#filename").change(function(e) {
+    var ext = $("input#filename").val().split(".").pop().toLowerCase();
+    studentsCSV = [];
+    if($.inArray(ext, ["csv"]) == -1) {
+    alert('Upload CSV');
+    return false;
+    } 
+    if (e.target.files != undefined) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var lines = e.target.result.split('\r\n');
+        for (i = 1; i < lines.length; ++i)
+        {
+            // console.log(lines[i]);
+            studentsCSV[i-1] = lines[i].split(';');
+        }
+    };
+    reader.readAsText(e.target.files.item(0));
+    }
+    return false;
+  });
+
+  $("#addStudentCSV").click(function () {
+    addStudentCSV();
   });
 
   getAllStudents();
@@ -205,6 +236,43 @@ function addStudent() {
   }
 }
 
+function addStudentCSV() {
+  studentsCSV.forEach(element => {
+    if (element == "" || element[0] == "" || element[1] == "") { 
+      let index = studentsCSV.indexOf(element);
+      studentsCSV.splice(index, 1);
+    }
+  });
+
+  if (studentsCSV.length < 1) {
+    alert("Seu CSV está vazio.");
+  } else {
+    var settings = {
+      url: backendServer + "/students-import",
+      method: "POST",
+      timeout: 0,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        list: studentsCSV
+      }),
+    };
+
+    $.ajax(settings).done(function (response) {
+      console.log('####');
+      console.log(response);
+      if (response) {
+        if (!alert("Alunos adicionados com sucesso!")) {
+          window.location.reload();
+        }
+      } else {
+        alert("Houve um problema ao tentar importar a lista!")
+      }
+    });
+  }
+}
+
 function studentToBeRemoved(id) {
   studentToBeRemovedId = id;
 }
@@ -278,6 +346,21 @@ function confirmDeleteStudent() {
   $.ajax(settings).done(function (response) {
     console.log(response);
     if (!alert("Aluno removido com sucesso!")) {
+      window.location.reload();
+    }
+  });
+}
+
+function confirmDeleteAllStudents() {
+  var settings = {
+    url: backendServer + "/students/",
+    method: "DELETE",
+    timeout: 0,
+  };
+
+  $.ajax(settings).done(function (response) {
+    console.log(response);
+    if (!alert("Todos os alunos foram removidos com sucesso!")) {
       window.location.reload();
     }
   });

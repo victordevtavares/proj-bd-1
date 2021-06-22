@@ -33,6 +33,7 @@ body {
   font-size: 13px;
   border: none;
   min-width: 50px;
+  max-width: 250px;
   border-radius: 1px;
   border: none;
   outline: none !important;

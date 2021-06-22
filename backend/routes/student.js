@@ -4,6 +4,9 @@ module.exports = (app) => {
   // Create a new Student
   app.post("/students", students.create);
 
+  // Create new Students Import
+  app.post("/students-import", students.import);
+
   // Retrieve all Students
   app.get("/students", students.getAll);
 
