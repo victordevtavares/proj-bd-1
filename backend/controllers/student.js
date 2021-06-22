@@ -1,4 +1,5 @@
 const Student = require("../models/student.js");
+let student = new Student();
 
 // Create and Save a new Student
 exports.create = (req, res) => {
@@ -16,7 +17,7 @@ exports.create = (req, res) => {
   });
 
   // Save Student in the database
-  Student.createStudent(student, (err, data) => {
+  student.createStudent(student, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while creating the Student.",
@@ -45,7 +46,7 @@ exports.import = (req, res) => {
     });
 
     // Save Student in the database
-    Student.createStudent(student, (err, data) => {
+    student.createStudent(student, (err, data) => {
         console.log(data);
     });
   });
@@ -54,7 +55,7 @@ exports.import = (req, res) => {
 
 // Retrieve all Students from the database.
 exports.getAll = (req, res) => {
-  Student.getAllStudents((err, data) => {
+  student.getAllStudents((err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving students.",
@@ -65,7 +66,7 @@ exports.getAll = (req, res) => {
 
 // Find a single Student with a studentId
 exports.get = (req, res) => {
-  Student.getById(req.params.studentId, (err, data) => {
+  student.getById(req.params.studentId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -89,7 +90,7 @@ exports.update = (req, res) => {
     });
   }
 
-  Student.updateById(req.params.studentId, new Student(req.body), (err, data) => {
+  student.updateById(req.params.studentId, new Student(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -106,7 +107,7 @@ exports.update = (req, res) => {
 
 // Delete a Student with the specified studentId in the request
 exports.delete = (req, res) => {
-  Student.remove(req.params.studentId, (err, data) => {
+  student.remove(req.params.studentId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -123,7 +124,7 @@ exports.delete = (req, res) => {
 
 // Delete all Students from the database.
 exports.deleteAll = (req, res) => {
-  Student.removeAll((err, data) => {
+  student.removeAll((err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while removing all students.",
